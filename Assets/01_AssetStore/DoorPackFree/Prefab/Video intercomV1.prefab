@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6928342168685393333}
   - component: {fileID: 3682505328321218892}
   - component: {fileID: 8356269680171787001}
-  - component: {fileID: 3447015192333150232}
   - component: {fileID: 3921256928538993851}
+  - component: {fileID: 4314362570391186433}
   m_Layer: 0
   m_Name: Video intercomV1
   m_TagString: Untagged
@@ -107,7 +107,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!65 &3447015192333150232
+--- !u!114 &3921256928538993851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3109230976107281808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6c9860aebf2c5949abaf2b8c80df076, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  openAngle: -90
+  smooth: 2
+--- !u!65 &4314362570391186433
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -126,21 +140,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.25061306, y: 0.15080003, z: 0.22100006}
-  m_Center: {x: 0.12178381, y: -0.000000059604645, z: 0.11050003}
---- !u!114 &3921256928538993851
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3109230976107281808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6c9860aebf2c5949abaf2b8c80df076, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  door: {fileID: 0}
-  openAngle: -90
-  openSpeed: 2
-  interactAction: {fileID: 8165206947998995717, guid: 53a8028d81e81954a8b7cd10a67fed8e, type: 3}
+  m_Size: {x: 0.66028345, y: 0.5047672, z: 1.3605281}
+  m_Center: {x: 0.32661897, y: 0.0032773912, z: -0.45926404}

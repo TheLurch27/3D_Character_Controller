@@ -8,6 +8,7 @@ public class MovementController : MonoBehaviour
     PlayerInput playerInput;
     CharacterController characterController;
     Animator animator;
+    Rigidbody rigidbody; // Add Rigidbody reference
 
     int isWalkingHash;
     int isRunningHash;
@@ -26,16 +27,52 @@ public class MovementController : MonoBehaviour
         playerInput = new PlayerInput();
         characterController = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
+        rigidbody = GetComponent<Rigidbody>(); // Assign Rigidbody component
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
 
-        playerInput.CharacterControls.Move.started += OnMovementInput;
-        playerInput.CharacterControls.Move.performed += OnMovementInput;
-        playerInput.CharacterControls.Move.canceled += OnMovementInput;
+        playerInput.Player.Move.started += OnMovementInput;
+        playerInput.Player.Move.performed += OnMovementInput;
+        playerInput.Player.Move.canceled += OnMovementInput;
 
-        playerInput.CharacterControls.Run.started += OnRunInput;
-        playerInput.CharacterControls.Run.canceled += OnRunInput;
+        playerInput.Player.Run.started += OnRunInput;
+        playerInput.Player.Run.canceled += OnRunInput;
+    }
+
+    private void Update()
+    {
+        HandleAnimation();
+        HandleGravity();
+
+        // Bewegung relativ zur Kamera ausrichten
+        if (isMovementPressed)
+        {
+            // Richtung relativ zur Kamera bestimmen
+            Vector3 cameraForward = Camera.main.transform.forward;
+            Vector3 cameraRight = Camera.main.transform.right;
+            cameraForward.y = 0f; // Y-Komponente für flache Bewegung ignorieren
+            cameraRight.y = 0f;
+
+            Vector3 desiredDirection = currentMovement.x * cameraRight + currentMovement.z * cameraForward;
+
+            // Charakter bewegen
+            if (isRunPressed)
+            {
+                characterController.Move(desiredDirection.normalized * runMultiplier * Time.deltaTime);
+            }
+            else
+            {
+                characterController.Move(desiredDirection.normalized * Time.deltaTime);
+            }
+
+            // Charakter in Richtung der Bewegung drehen
+            if (desiredDirection != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(desiredDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationFactorPerFrame * Time.deltaTime);
+            }
+        }
     }
 
     void OnRunInput(InputAction.CallbackContext ctx)
@@ -55,9 +92,9 @@ public class MovementController : MonoBehaviour
         isMovementPressed = currentMovementInput.x != 0 || currentMovementInput.y != 0;
     }
 
-    void handleGravity()
+    void HandleGravity()
     {
-        if(characterController.isGrounded)
+        if (characterController.isGrounded)
         {
             float groundedGravity = -0.05f;
             currentMovement.y = groundedGravity;
@@ -69,6 +106,9 @@ public class MovementController : MonoBehaviour
             currentMovement.y += gravity;
             currentRunMovement.y += gravity;
         }
+
+        // Apply gravity to Rigidbody
+        rigidbody.AddForce(Vector3.up * currentMovement.y, ForceMode.Acceleration);
     }
 
     void HandleAnimation()
@@ -112,30 +152,13 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        HandleRotation();
-        HandleAnimation();
-        handleGravity();
-
-        if (isRunPressed)
-        {
-            characterController.Move(currentRunMovement * Time.deltaTime);
-        }
-        else
-        {
-            characterController.Move(currentMovement * Time.deltaTime);
-        }
-    }
-
     private void OnEnable()
     {
-        playerInput.CharacterControls.Enable();
+        playerInput.Player.Enable();
     }
 
     private void OnDisable()
     {
-        playerInput.CharacterControls.Disable();
+        playerInput.Player.Disable();
     }
 }
