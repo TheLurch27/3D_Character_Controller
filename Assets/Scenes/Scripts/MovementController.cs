@@ -8,7 +8,8 @@ public class MovementController : MonoBehaviour
     PlayerInput playerInput;
     CharacterController characterController;
     Animator animator;
-    Rigidbody rigidbody; // Add Rigidbody reference
+    Rigidbody rigidbody;
+    [SerializeField] private Transform target;
 
     int isWalkingHash;
     int isRunningHash;
@@ -26,8 +27,8 @@ public class MovementController : MonoBehaviour
     {
         playerInput = new PlayerInput();
         characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        rigidbody = GetComponent<Rigidbody>(); // Assign Rigidbody component
+        animator = GetComponentInChildren<Animator>();
+        rigidbody = GetComponent<Rigidbody>();
 
         isWalkingHash = Animator.StringToHash("isWalking");
         isRunningHash = Animator.StringToHash("isRunning");
@@ -59,10 +60,11 @@ public class MovementController : MonoBehaviour
             // Charakter bewegen
             if (isRunPressed)
             {
-                characterController.Move(desiredDirection.normalized * runMultiplier * Time.deltaTime);
+                Transform cameraTransform = Camera.main.transform;
             }
             else
             {
+                
                 characterController.Move(desiredDirection.normalized * Time.deltaTime);
             }
 
